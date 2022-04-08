@@ -11,3 +11,6 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+@import "../styles/_variables.scss";
+@import "../../node_modules/@coreui/coreui/scss/coreui-utilities.scss";
+
