@@ -3,9 +3,17 @@ import ReactDOM from 'react-dom/client';
 import './styles/index.scss';
 import App from './views/App';
 import reportWebVitals from './reportWebVitals';
+import {Provider} from 'react-redux'
+import {createStore} from 'redux'
+import rootReducer from './store/reducers/rootReducer'
+const reduxStore = createStore(rootReducer,
+    //Config redux dev tool extension
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <App/>
+    <Provider store={reduxStore}>
+        <App/>
+    </Provider>,
 )
 // ReactDOM.render(
 //   <React.StrictMode>

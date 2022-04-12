@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-// import { useSelector, useDispatch } from 'react-redux'
+ import { useSelector, useDispatch } from 'react-redux'
 import {
   CContainer,
   CHeader,
@@ -17,17 +17,17 @@ import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
 import { logo } from '../assets/brand/logo'
-
+import { setSideBar } from '../store/actions/setsSideBar';
 const AppHeader = () => {
-  // const dispatch = useDispatch()
-  // const sidebarShow = useSelector((state) => state.sidebarShow)
+  const dispatch = useDispatch()
+  const sidebarShow = useSelector((state) => state.listSideBars.sidebarShow);
 
   return (
     <CHeader position="sticky" className="mb-4">
       <CContainer fluid>
         <CHeaderToggler
           className="ps-1"
-          // onClick={() => dispatch({ type: 'set', sidebarShow: !sidebarShow })}
+          onClick={() => dispatch(setSideBar(!sidebarShow))}
         >
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
@@ -76,4 +76,5 @@ const AppHeader = () => {
   )
 }
 
-export default AppHeader
+
+export default React.memo(AppHeader);
