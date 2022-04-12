@@ -11,6 +11,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+html:not([dir=rtl]) .wrapper {
+  padding-left: 0;
+  padding-left: var(--cui-sidebar-occupy-start,0);
+}
 @import "../styles/_variables.scss";
-@import "../../node_modules/@coreui/coreui/scss/coreui-utilities.scss";
+$enable-ltr: true;
+$enable-rtl: true;
+@import "../../node_modules/@coreui/coreui/scss/coreui";
 
