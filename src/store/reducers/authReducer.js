@@ -1,14 +1,14 @@
+
 const initState = {
     // Khoi tao mac dinh state
-    sidebarShow: true,
     isLogged:false,
+    currentUser:{}
 }
 
 export default function (state = initState, actions) {
-
     switch (actions.type) {
-        case 'SET_SIDE_BAR':
-            return { ...state,sidebarShow:actions.payload}
+        case 'LOGIN_ADMIN':
+            return {...state, currentUser: actions.payload}
         default:
             return state;
     }
