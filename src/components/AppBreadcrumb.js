@@ -9,15 +9,17 @@ const AppBreadcrumb = () => {
   const currentLocation = useLocation().pathname
 
   const getRouteName = (pathname, routes) => {
-    const currentRoute = routes.find((route) => route.path === pathname)
+    const currentRoute = routes.find((route) => route.path === pathname.replace('admin/', ''))
     return currentRoute ? currentRoute.name : false
   }
 
   const getBreadcrumbs = (location) => {
     const breadcrumbs = []
-    location.split('/').reduce((prev, curr, index, array) => {
+      location.split('/').reduce((prev, curr, index, array) => {
       const currentPathname = `${prev}/${curr}`
+
       const routeName = getRouteName(currentPathname, routes)
+
       routeName &&
         breadcrumbs.push({
           pathname: currentPathname,

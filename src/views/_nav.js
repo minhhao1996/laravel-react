@@ -40,16 +40,20 @@ const _nav = [
     },
     {
         component: CNavGroup,
-        name: 'Blogs',
-        to: '/admin/blog',
+        name: 'Users',
+        to: '/admin/users',
         icon: <CIcon icon={cilCursor} customClassName="nav-icon" />,
         items: [
             {
                 component: CNavItem,
-                name: 'Post',
-                to: '/admin/blog/post',
+                name: 'List',
+                to: '/admin/users',
             },
-
+            {
+                component: CNavItem,
+                name: 'Roles',
+                to: '/admin/roles',
+            },
         ],
     },
 

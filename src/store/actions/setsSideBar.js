@@ -1,5 +1,5 @@
 export const setSideBar = (show) => {
-    console.log(show)
+
     return {
         type: 'SET_SIDE_BAR',
         payload: show,

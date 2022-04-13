@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Link } from 'react-router-dom'
+import {Link, useHistory} from 'react-router-dom'
 import {
     CButton,
     CCard,
@@ -14,39 +14,53 @@ import {
     CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+import {cilLockLocked, cilUser} from '@coreui/icons'
 import {toast} from "react-toastify";
+import userApi from "../../../services/userApi";
 import {useDispatch} from "react-redux";
-import {loginAdminHandler} from "../../../store/actions/auth";
-import userApi from '../../../services/userApi';
-import StorageKeys from '../../../constants/storage-keys';
-const Login = () => {
+import {adminLoginSuccess} from "../../../store/actions/adminActions";
+
+const Login = (props) => {
     const [validated, setValidated] = useState(false);
     const [enteredName, setEnteredName] = useState('');
-    const [enteredPassword, setEnterPassword]=useState('');
-    const dispatch = useDispatch()
-    const handleSubmitLogin =  (event) => {
+    const [enteredPassword, setEnterPassword] = useState('');
+    const dispatch = useDispatch();
+
+    const handleSubmitLogin = async (event) => {
         event.preventDefault()
         const form = event.currentTarget
         if (form.checkValidity() === false) {
             event.stopPropagation()
             toast.error('Errors ')
-        }else {
-            let data ={
-                login:enteredName,
-                password:enteredPassword
+            setValidated(true);
+        } else {
+            let data = {
+                login: enteredName,
+                password: enteredPassword
             }
-            const res =  userApi.login(data);
+            try {
+               let res= await userApi.login(data);
+                if (res.status === 200 && res.data) {
+                    dispatch(adminLoginSuccess(res.data))
+                }
 
-            console.log(res)
-            // await dispatch(loginAdminHandler(enteredName,enteredPassword));
+
+            } catch (error) {
+
+                const resMessage =
+                    (error.response &&
+                        error.response.data &&
+                        error.response.data.message) ||
+                    error.message ||
+                    error.toString();
+                toast.error(resMessage)
+                setValidated(false);
+            }
         }
-        setValidated(true);
-
-
     }
     return (
         <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+
             <CContainer>
                 <CRow className="justify-content-center">
                     <CCol md={8}>
@@ -62,7 +76,7 @@ const Login = () => {
                                         <p className="text-medium-emphasis">Sign In to your account</p>
                                         <CInputGroup className="mb-3">
                                             <CInputGroupText>
-                                                <CIcon icon={cilUser} />
+                                                <CIcon icon={cilUser}/>
                                             </CInputGroupText>
                                             <CFormInput placeholder="Username" autoComplete="username" required
                                                         onChange={(e) => {
@@ -75,7 +89,7 @@ const Login = () => {
                                         </CInputGroup>
                                         <CInputGroup className="mb-4">
                                             <CInputGroupText>
-                                                <CIcon icon={cilLockLocked} />
+                                                <CIcon icon={cilLockLocked}/>
                                             </CInputGroupText>
                                             <CFormInput
                                                 type="password"
@@ -106,7 +120,7 @@ const Login = () => {
                                     </CForm>
                                 </CCardBody>
                             </CCard>
-                            <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
+                            <CCard className="text-white bg-primary py-5" style={{width: '44%'}}>
                                 <CCardBody className="text-center">
                                     <div>
                                         <h2>Sign up</h2>

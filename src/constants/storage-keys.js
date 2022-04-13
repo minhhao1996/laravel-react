@@ -1,5 +1,5 @@
 const StorageKeys = {
-    user: 'user',
+    user: 'user_api',
     access: 'access_token',
     refresh: 'refresh_token',
 }

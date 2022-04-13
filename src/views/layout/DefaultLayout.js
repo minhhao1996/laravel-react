@@ -5,11 +5,12 @@ import Login from '../admin/auth/Login'
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
 const DefaultLayout = () => {
-    const ísLogged = useSelector((state) => state.listSideBars.isLogged);
+    const isLoggedIn = useSelector((state) => state.adminStore.isLoggedIn );
+
     return (
             <div>
                 {
-                    !ísLogged ?
+                    !isLoggedIn ?
                         <Login/>:
                         <div>
                             <AppSidebar />

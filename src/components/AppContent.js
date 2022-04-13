@@ -16,18 +16,18 @@ const AppContent = () => {
                 <Route
                   key={idx}
                   path={route.path}
-                  exact={route.exact}
+                  exact="exact"
                   name={route.name}
                   element={<route.element />}
                 />
               )
             )
           })}
-          <Route path="/" element={<Navigate to="dashboard" replace />} />
+          <Route path="/admin" element={<Navigate to="dashboard" replace />} />
         </Routes>
       </Suspense>
     </CContainer>
   )
 }
 
-export default React.memo(AppContent)
+export default AppContent
