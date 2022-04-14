@@ -19,6 +19,7 @@ const User = (props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRecords, setTotalRecords] = useState(0);
     const [showTotalUsers, setShowTotalUsers] = useState(10);
+    const [searchUser, setSearchUser] = useState('');
     const tableActivitiesLength = ['all','1', '10', '20', '30']
     // useEffect(() => {
     //     const fetchUsers = async () => {
@@ -48,8 +49,15 @@ const User = (props) => {
         const lastPageIndex = firstPageIndex + showTotalUsers;
         return users.slice(firstPageIndex, lastPageIndex);
     }, [currentPage]);
+    const searchUserHandler=(event)=>{
+        let searchKey =event.target.value;
+        const delayDebounceFn = setTimeout(() => {
+            setSearchUser(searchKey);
+        }, 3000)
+        return () => clearTimeout(delayDebounceFn)
 
-    const pageVisited= currentPage *showTotalUsers
+    }
+    console.log(searchUser)
     return <CCard>
         <CCardHeader>
             <CRow className="justify-content-between">
@@ -64,7 +72,7 @@ const User = (props) => {
                     </CDropdown>
                 </CCol>
                 <CCol xs={3}>
-                    <CFormInput/>
+                    <CFormInput onChange={(event)=>searchUserHandler(event)}/>
                 </CCol>
             </CRow>
 
@@ -89,8 +97,8 @@ const User = (props) => {
                 </thead>
                 <tbody>
                 {
-                    users.length > 0 &&
-                    users.slice(pageVisited,pageVisited+showTotalUsers).map((item, index) => <ItemUSer user={item} key={item.id} index={index}/>)
+                    currentTableData.length > 0 &&
+                    currentTableData.map((item, index) => <ItemUSer user={item} key={item.id} index={index}/>)
                 }
                 </tbody>
             </table>
@@ -112,7 +120,7 @@ const User = (props) => {
                     <CCol xs={5}>
                         {showTotalUsers !== 'all' &&
                         <Pagination
-                            totalRecords={100}
+                            totalRecords={totalRecords}
                             currentPage={currentPage}
                             pageLimit={showTotalUsers}
                             pageNeighbours={1}
