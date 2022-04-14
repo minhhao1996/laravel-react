@@ -3,14 +3,13 @@ import PropTypes from "prop-types";
 import {CPagination, CPaginationItem} from "@coreui/react";
 
 const Pagination = (props) => {
-    const {currentPage, totalRecords, pageNeighbours, pageLimit} = props;
+    const {currentPage, totalRecords, pageNeighbours, pageLimit, onPageChange} = props;
     const [totalPages, setTotalPages] = useState(0)
-    const LEFT_PAGE = "LEFT";
-    const RIGHT_PAGE = "RIGHT";
+    const DOTS = "...";
     useEffect(() => {
+        console.log(totalRecords / pageLimit)
         setTotalPages(Math.ceil(totalRecords / pageLimit))
-    }, [])
-
+    }, [pageLimit])
 
     const range = (from, to, step = 1) => {
         let i = from;
@@ -24,23 +23,60 @@ const Pagination = (props) => {
         return range;
     };
     const fetchPageNumbers = () => {
-        let pages = [];
 
+        const totalNumbers = pageNeighbours * 2 + 5;
+        const totalBlocks = totalNumbers + 2;
+        if (totalPages > totalBlocks) {
+
+            const leftSiblingIndex = Math.max(currentPage - pageNeighbours, 1);
+            const rightSiblingIndex = Math.min(
+                currentPage + pageNeighbours,
+                totalPages
+            );
+            const shouldShowLeftDots = leftSiblingIndex > 2;
+            const shouldShowRightDots = rightSiblingIndex < totalPages - 2;
+            const firstPageIndex = 1;
+            const lastPageIndex = totalPages;
+            /* Case 2: No left dots to show, but rights dots to be shown*/
+            if (!shouldShowLeftDots && shouldShowRightDots) {
+                let leftItemCount = 3 + 2 * pageNeighbours;
+                let leftRange = range(1, leftItemCount);
+
+                return [...leftRange, DOTS, totalPages];
+            }
+            // Case 3: No right dots to show, but left dots to be shown
+            if (shouldShowLeftDots && !shouldShowRightDots) {
+                let rightItemCount = 3 + 2 * pageNeighbours;
+                let rightRange = range(
+                    totalPages - rightItemCount + 1,
+                    totalPages
+                );
+                return [firstPageIndex, DOTS, ...rightRange];
+            }
+            /* Case 4: Both left and right dots to be shown */
+            if (shouldShowLeftDots && shouldShowRightDots) {
+                let middleRange = range(leftSiblingIndex, rightSiblingIndex);
+                return [firstPageIndex, DOTS, ...middleRange, DOTS, lastPageIndex];
+            }
+        }
         return range(1, totalPages);
-
 
     };
 
     if (!totalRecords || totalRecords === 1) return null;
     const pages = fetchPageNumbers();
-    console.log(pages)
+
     return (<CPagination align="end" aria-label="Page navigation example">
-        <CPaginationItem disabled>Previous</CPaginationItem>
+        <CPaginationItem disabled={currentPage === 1}
+                         onClick={() => onPageChange(currentPage - 1)}>Previous</CPaginationItem>
         {
             pages.length > 0 &&
-            pages.map((item, index)=>   <CPaginationItem key={index}>{item}</CPaginationItem>)
+            pages.map((item, index) =>
+                <CPaginationItem key={index} active={item === currentPage}
+                                 onClick={item !== DOTS ? () => onPageChange(item) : undefined}>{item}</CPaginationItem>)
         }
-        <CPaginationItem>Next</CPaginationItem>
+        <CPaginationItem disabled={currentPage === totalPages}
+                         onClick={() => onPageChange(currentPage + 1)}>Next</CPaginationItem>
     </CPagination>)
 }
 export default Pagination;
