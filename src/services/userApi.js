@@ -1,6 +1,5 @@
 import axiosClient from "./axiosClient";
 
-
 const userApi = {
     register(data) {
         const url = 'register/';
@@ -15,6 +14,10 @@ const userApi = {
     },
     getCurrentUser() {
         return JSON.parse(localStorage.getItem('user'));
+    },
+    async getAllUsers (){
+        const url = '/api/users';
+        return  axiosClient.get(url);
     }
 }
 
