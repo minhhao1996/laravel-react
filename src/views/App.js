@@ -26,7 +26,7 @@ function App() {
                     <Route exact path="/admin/register" name="Register Page" element={<Register />} />
                     <Route  path="/404" name="Page 404" element={<Page404 />} />
                     <Route  path="/500" name="Page 500" element={<Page500 />} />
-                    <Route exact path="/users" name="Login Page" element={<User />} />
+                    {/*<Route exact path="/users" name="Login Page" element={<User />} />*/}
                     <Route exact path="/admin/*" name="Dashboard" element={<DefaultLayout />}/>
                     {/*// Front end layout*/}
                     <Route  path="*" name="Home" element={<DefaultLayoutFrontEnd />}  />

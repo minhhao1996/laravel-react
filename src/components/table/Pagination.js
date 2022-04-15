@@ -6,10 +6,10 @@ const Pagination = (props) => {
     const {currentPage, totalRecords, pageNeighbours, pageLimit, onPageChange} = props;
     const [totalPages, setTotalPages] = useState(0)
     const DOTS = "...";
+
     useEffect(() => {
-        console.log(totalRecords / pageLimit)
-        setTotalPages(Math.ceil(totalRecords / pageLimit))
-    }, [pageLimit])
+        setTotalPages(Math.ceil(totalRecords / pageLimit));
+    }, [totalRecords, pageLimit])
 
     const range = (from, to, step = 1) => {
         let i = from;
@@ -26,6 +26,7 @@ const Pagination = (props) => {
 
         const totalNumbers = pageNeighbours * 2 + 5;
         const totalBlocks = totalNumbers + 2;
+
         if (totalPages > totalBlocks) {
 
             const leftSiblingIndex = Math.max(currentPage - pageNeighbours, 1);
@@ -60,11 +61,13 @@ const Pagination = (props) => {
             }
         }
         return range(1, totalPages);
-
     };
 
-    if (!totalRecords || totalRecords === 1) return null;
     const pages = fetchPageNumbers();
+
+
+    if (!totalRecords || totalRecords === 1) return null;
+
 
     return (<CPagination align="end" aria-label="Page navigation example">
         <CPaginationItem disabled={currentPage === 1}

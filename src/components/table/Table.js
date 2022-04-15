@@ -8,13 +8,14 @@ import {
     CDropdownMenu,
     CDropdownToggle, CFormInput, CFormSelect, CPagination, CPaginationItem, CRow
 } from "@coreui/react";
-import ItemUSer from "./ItemUser";
-import {useEffect, useState, useMemo} from "react";
+
+import {useEffect, useState} from "react";
 import userApi from "../../../services/userApi";
 import {toast} from "react-toastify";
 import Pagination from "../../../components/table/Pagination";
+import ItemTable from "./ItemTable";
 
-const User = (props) => {
+const TableData = (props) => {
     const [users, setUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [showing, setShowing] = useState(1);
@@ -121,7 +122,7 @@ const User = (props) => {
                 <tbody>
                 {
                     users.length > 0 &&
-                    users.map((item, index) => <ItemUSer user={item} key={item.id} index={index}/>)
+                    users.map((item, index) => <ItemTable user={item} key={item.id} index={index}/>)
                 }
                 </tbody>
             </table>
@@ -157,4 +158,4 @@ const User = (props) => {
         </CCardFooter>
     </CCard>
 }
-export default User;
+export default TableData;
