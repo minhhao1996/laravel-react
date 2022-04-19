@@ -7,7 +7,7 @@ import reportWebVitals from './reportWebVitals'
 import {Provider} from 'react-redux'
 import {store} from './store/store'
 import './styles/index.scss'
-import {BrowserRouter,Routes, Route} from 'react-router-dom'
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(

@@ -11,3 +11,9 @@ export const adminLoginSuccess = (adminInfo) => (
         adminInfo: adminInfo,
     }
 );
+export const adminRegisterSuccess = (adminInfo) => (
+    {
+        type: actionTypes.ADMIN_REGISTER_SUCCESS,
+        adminInfo: adminInfo,
+    }
+);

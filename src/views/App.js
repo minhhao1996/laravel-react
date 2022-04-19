@@ -3,12 +3,15 @@ import '../App.css';
 import {BrowserRouter, HashRouter, Route, Routes} from "react-router-dom";
 import DefaultLayoutFrontEnd from "./layout/DefaultLayoutFrontEnd";
 import {ToastContainer} from "react-toastify";
-import User from "./admin/user/User";
+import 'react-toastify/dist/ReactToastify.css'
+
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'));
 //Pages
+
 const Login = React.lazy(() => import('./admin/auth/Login'));
 const Register = React.lazy(() => import('./admin/auth/Register'));
+const VerifyEmail = React.lazy(() => import('./admin/auth/VerifyEmail'));
 const Page404 = React.lazy(() => import('./errors/Page404'));
 const Page500 = React.lazy(() => import('./errors/Page500'));
 const loading = (
@@ -16,13 +19,16 @@ const loading = (
       <div className="sk-spinner sk-spinner-pulse"></div>
     </div>
 )
+
+
 function App() {
   return (
     <>
         <Suspense fallback={loading}>
             <BrowserRouter>
                 <Routes>
-                    <Route exact path="/login" name="Login Page" element={<Login />} />
+                    <Route exact path="/verify/email" name="Verify Email Page" element={<VerifyEmail />} />
+                    <Route exact path="/admin/login" name="Login Page" element={<Login />} />
                     <Route exact path="/admin/register" name="Register Page" element={<Register />} />
                     <Route  path="/404" name="Page 404" element={<Page404 />} />
                     <Route  path="/500" name="Page 500" element={<Page500 />} />
@@ -34,6 +40,7 @@ function App() {
                 </Routes>
             </BrowserRouter>
         </Suspense>
+        <ToastContainer/>
     </>
 
   );

@@ -14,16 +14,16 @@ import {
     CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import {cilLockLocked, cilUser} from '@coreui/icons'
+import {cilLockLocked, cilMap, cilUser} from '@coreui/icons'
 import {toast} from "react-toastify";
 import userApi from "../../../services/userApi";
 import {useDispatch} from "react-redux";
 import {adminLoginSuccess} from "../../../store/actions/adminActions";
 
-const Login = (props) => {
+const VerifyEmail = (props) => {
     const [validated, setValidated] = useState(false);
-    const [enteredName, setEnteredName] = useState('');
-    const [enteredPassword, setEnterPassword] = useState('');
+    const [enterEmail, setEnterEmail] = useState('');
+
     const dispatch = useDispatch();
 
     const handleSubmitLogin = async (event) => {
@@ -31,15 +31,11 @@ const Login = (props) => {
         const form = event.currentTarget
         if (form.checkValidity() === false) {
             event.stopPropagation()
-            toast.error('Errors ')
             setValidated(true);
         } else {
-            let data = {
-                login: enteredName,
-                password: enteredPassword
-            }
+
             try {
-               let res= await userApi.login(data);
+                let res= await userApi.login(enterEmail);
                 if (res.status === 200 && res.data) {
                     dispatch(adminLoginSuccess(res.data))
                 }
@@ -72,50 +68,28 @@ const Login = (props) => {
                                         noValidate
                                         validated={validated}
                                         onSubmit={handleSubmitLogin}>
-                                        <h1>Login</h1>
-                                        <p className="text-medium-emphasis">Sign In to your account</p>
+                                        <h1>Verify Account</h1>
+                                        <p className="text-medium-emphasis">Verify to your email</p>
                                         <CInputGroup className="mb-3">
                                             <CInputGroupText>
-                                                <CIcon icon={cilUser}/>
+                                                <CIcon icon={cilMap}/>
                                             </CInputGroupText>
-                                            <CFormInput placeholder="Username" autoComplete="username" required
+                                            <CFormInput placeholder="Email" autoComplete="email" required type="email"
                                                         onChange={(e) => {
-                                                            setEnteredName(e.target.value);
+                                                            setEnterEmail(e.target.value);
                                                         }}
-                                                        value={enteredName}/>
-                                            <CFormFeedback tooltip invalid>
-                                                The user is required
-                                            </CFormFeedback>
+                                                        value={enterEmail}/>
+
+                                            <CFormFeedback  tooltip invalid>Please enter your email and mail format</CFormFeedback>
                                         </CInputGroup>
-                                        <CInputGroup className="mb-4">
-                                            <CInputGroupText>
-                                                <CIcon icon={cilLockLocked}/>
-                                            </CInputGroupText>
-                                            <CFormInput
-                                                type="password"
-                                                placeholder="Password"
-                                                autoComplete="current-password"
-                                                required
-                                                onChange={(e) => {
-                                                    setEnterPassword(e.target.value);
-                                                }}
-                                                value={enteredPassword}
-                                            />
-                                            <CFormFeedback tooltip invalid>
-                                                The password is required
-                                            </CFormFeedback>
-                                        </CInputGroup>
+
                                         <CRow>
                                             <CCol xs={6}>
                                                 <CButton color="primary" className="px-4" type="submit">
-                                                    Login
+                                                    Verify
                                                 </CButton>
                                             </CCol>
-                                            <CCol xs={6} className="text-right">
-                                                <CButton color="link" className="px-0">
-                                                    Forgot password?
-                                                </CButton>
-                                            </CCol>
+
                                         </CRow>
                                     </CForm>
                                 </CCardBody>
@@ -145,4 +119,4 @@ const Login = (props) => {
     )
 }
 
-export default Login
+export default VerifyEmail
