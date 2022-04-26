@@ -1,26 +1,11 @@
-// import axios from 'axios';
-//
-// const axiosClient = axios.create({
-//     baseURL: ' http://127.0.0.1:8000/',
-//     headers: {
-//         'content-type': 'application/json',
-//         'Accept': 'application/json',
-//         'Access-Control-Allow-Origin': '*',
-//         'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
-//
-//     },
-// });
-// axiosClient.interceptors.response.use(
-//     (response)=>{
-//         return response
-//     }
-// )
-// export default axiosClient
+
 
 import axios from 'axios';
+
 const axiosClient = () => {
+    const baseURL= 'http://127.0.0.1:8000/';
     const defaultOptions = {
-        baseURL:'http://127.0.0.1:8000/',
+        baseURL:baseURL,
         headers: {
             'Content-Type': 'application/json',
             'Accept':'application/json',
@@ -38,8 +23,15 @@ const axiosClient = () => {
         return config;
     });
     instance.interceptors.response.use(
-        (response)=>{
+        response=>{
             return response
+        },
+        async (error) => {
+            if (error.response.status===401){
+                localStorage.removeItem('persist:admin')
+            }
+            return true;
+
         }
     )
     return instance;

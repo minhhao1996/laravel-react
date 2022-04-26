@@ -17,3 +17,14 @@ export const adminRegisterSuccess = (adminInfo) => (
         adminInfo: adminInfo,
     }
 );
+export const adminRefreshToken = () => (
+    {
+        type: actionTypes.ADMIN_REFRESH_TOKEN,
+    }
+);
+export const toggleModal = (toggle) => (
+    {
+        type: actionTypes.MODAL_TOGGLE,
+        toggle: toggle,
+    }
+);

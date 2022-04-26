@@ -5,9 +5,11 @@ const initState = {
     isLogged: false,
     isLoggedIn: false,
     adminInfo: {},
+    toggleModal:false
 }
 
 export default function (state = initState, actions) {
+
     switch (actions.type) {
         case actionTypes.ADMIN_LOGIN_SUCCESS:
             return {...state,
@@ -23,6 +25,10 @@ export default function (state = initState, actions) {
             return {...state,
                 isLoggedIn: false,
                 adminInfo: null
+            }
+        case actionTypes.MODAL_TOGGLE:
+            return {...state,
+                toggleModal: actions.toggle
             }
         default:
             return state;

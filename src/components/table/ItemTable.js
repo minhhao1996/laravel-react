@@ -1,11 +1,13 @@
 import {Link} from "react-router-dom";
+import React, {useEffect, useState} from "react";
 
 const ItemUSer = (props) => {
-    const {user, tableColumns,operations} = props;
+    let {user, tableColumns,operations,isCheck,handleClickCheckboxTable} = props;
 
     const checkbox = (id, key) => {
         return (<td key={key}><label className="control control--checkbox">
-            <input type="checkbox" value={id}/>
+            <input type="checkbox" id={id}  checked={isCheck.includes(id)}
+                   onChange={handleClickCheckboxTable} />
         </label></td>)
     }
     const link = (href, text, key) => {
@@ -28,7 +30,7 @@ const ItemUSer = (props) => {
         const keyTd = key + '-' + 'item.id';
         let column_table = item.column;
         if (item.label_th === 'checkbox') {
-            return checkbox(item.id, keyTd)
+            return checkbox(user.id, keyTd)
         }
         if (item.link) {
             let href = `/admin/users/${user.id}`;
@@ -41,7 +43,7 @@ const ItemUSer = (props) => {
         if (item.img_public) {
             let avatar = 'https://avatars.dicebear.com/api/adventurer/your-custom-seed.svg';
             if (user.avatar) {
-                avatar = `http://127.0.0.1:8000/storage/${item.img_public}/` + user.avatar
+                avatar = user.avatar
             }
             return image(keyTd, avatar)
         }
@@ -52,12 +54,12 @@ const ItemUSer = (props) => {
         <td>
             <div className="table-actions">
                 {
-                    operations.map
+                    // operations.map
                 }
-                <button className="btn btn-primary">
+                <button className="btn btn-primary" onClick={()=>props.handleActionTable(user,'edit')}>
                     Edit
                 </button>
-                <button className="btn btn-danger">
+                <button className="btn btn-danger" onClick={()=>props.handleActionTable(user,'delete')}>
                     Delete
                 </button>
             </div>
@@ -65,3 +67,4 @@ const ItemUSer = (props) => {
     </tr>
 }
 export default ItemUSer;
+

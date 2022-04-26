@@ -12,18 +12,30 @@ import {
 import {useEffect, useState} from "react";
 import Pagination from "../../components/table/Pagination";
 import ItemTable from "./ItemTable";
+import UserForm from "../../views/admin/user/UserForm";
+import {useDispatch, useSelector} from "react-redux";
+import {toggleModal} from "../../store/actions/adminActions";
+import {toast} from "react-toastify";
+import userApi from "../../services/userApi";
+import {wait} from "@testing-library/user-event/dist/utils";
 
 const TableData = (props) => {
-    const {dataTable, tableColumns,operations } = props;
+
+    const {dataTable, tableColumns, operations, loadData} = props;
     const [users, setUsers] = useState([]);
+    const [item, setItem] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [showing, setShowing] = useState(1);
 
     const [totalRecords, setTotalRecords] = useState(0);
-    const [showingTo, setShowingTo] = useState(0);
-    const [showTotalTable, setShowTotalTable] = useState(1);
+    const [showingTo, setShowingTo] = useState(1);
+    const [showTotalTable, setShowTotalTable] = useState(10);
     const [searchTableKey, setSearchTableKey] = useState('');
-    const tableActivitiesLength = ['all', '1', '10', '20', '30']
+    const tableActivitiesLength = ['all', '2', '10', '20', '30'];
+    const [isCheckAll, setIsCheckAll] = useState(false);
+    const [isCheck, setIsCheck] = useState([]);
+    const [typeAction, setTypeAction] = useState('');
+    const dispatch = useDispatch()
     useEffect(() => {
         currentDataUser(searchTableKey);
     }, [dataTable, currentPage, showTotalTable]);
@@ -31,10 +43,11 @@ const TableData = (props) => {
     const changeTotalShowHandler = (event) => {
         if (event.target.value !== 'all') {
             setShowTotalTable(parseInt(event.target.value));
+            currentDataUser(searchTableKey);
         } else {
-            setShowTotalTable(200);
+            setShowTotalTable(totalRecords);
         }
-        setCurrentPage(1)
+        return true;
     }
     // Handler search
     const arraySearch = (array, keyword) => {
@@ -45,21 +58,23 @@ const TableData = (props) => {
     }
     // Get current data of table
     const currentDataUser = (keySearch = '') => {
+        const firstPageIndex = (currentPage - 1) * showTotalTable;
+        const lastPageIndex = firstPageIndex + showTotalTable;
+        setShowing(firstPageIndex + 1)
 
         if (dataTable) {
-            let data = dataTable;
+            let data = [...dataTable]
             if (keySearch !== '') {
                 data = arraySearch(data, keySearch)
             }
-            const firstPageIndex = (currentPage - 1) * showTotalTable;
-            const lastPageIndex = firstPageIndex + showTotalTable;
             const users_page = data.slice(firstPageIndex, lastPageIndex);
             setUsers(users_page);
-            setTotalRecords(data.length);
-            if (currentPage)
-                setShowing(firstPageIndex + 1)
-            setShowingTo(lastPageIndex > totalRecords ? totalRecords : lastPageIndex)
+            setTotalRecords(data.length)
+            setTotalRecords(data.length)
+            let numberShowing = firstPageIndex + showTotalTable;
+            setShowingTo(numberShowing)
         }
+
     }
     const searchUserHandler = async (event) => {
         let searchKey = event.target.value;
@@ -67,6 +82,54 @@ const TableData = (props) => {
         await currentDataUser(searchKey);
     }
 
+    const submitHandelSuccess = () => {
+        closeModal();
+    }
+    const handleActionTable = (item, type) => {
+        dispatch(toggleModal(true));
+        setItem(item)
+        setTypeAction(type);
+    }
+    const checkAllTable = (e) => {
+        setIsCheckAll(!isCheckAll);
+        setIsCheck(users.map(li => li.id));
+        if (isCheckAll) {
+            setIsCheck([]);
+        }
+    }
+
+    const handleClickCheckboxTable = (e) => {
+        let {id, checked} = e.target;
+        if (checked) {
+            setIsCheck([...isCheck, parseInt(id)]);
+        } else {
+            setIsCheck(isCheck.filter(item => item !== parseInt(id)));
+        }
+    }
+
+    const closeModal = () => {
+        dispatch(toggleModal(false));
+        setTypeAction('');
+        loadData();
+        setItem(null)
+    }
+    const bulkDeleteHandler = () => {
+        if (isCheck.length > 0) {
+            try {
+                isCheck.map(id => {
+                    userApi.destroy(id);
+                })
+                let result = users.filter(item => !isCheck.includes(item.id));
+                setIsCheck([]);
+                setUsers(result);
+                toast.error('Delete successfully')
+            } catch (e) {
+                toast.error(e.message)
+            }
+        } else {
+            toast.error('Vui long chon item can xoas')
+        }
+    }
     return <CCard>
         <CCardHeader>
             <CRow className="justify-content-between">
@@ -74,9 +137,7 @@ const TableData = (props) => {
                     <CDropdown>
                         <CDropdownToggle color="secondary">Bulk Actions</CDropdownToggle>
                         <CDropdownMenu>
-                            <CDropdownItem href="#">Action</CDropdownItem>
-                            <CDropdownItem href="#">Another action</CDropdownItem>
-                            <CDropdownItem href="#">Something else here</CDropdownItem>
+                            <CDropdownItem onClick={bulkDeleteHandler}>Delete</CDropdownItem>
                         </CDropdownMenu>
                     </CDropdown>
                 </CCol>
@@ -84,7 +145,6 @@ const TableData = (props) => {
                     <CFormInput onChange={(event) => searchUserHandler(event)}/>
                 </CCol>
             </CRow>
-
         </CCardHeader>
         <CCardBody>
             <table className="table table-striped table-responsive custom-table">
@@ -93,17 +153,25 @@ const TableData = (props) => {
                     {tableColumns.map((item, key) => <th scope="col" key={key}>{
                         item.label_th === 'checkbox' ?
                             <label className="control control--checkbox">
-                                <input type="checkbox"/>
+                                <input type="checkbox" onChange={checkAllTable}
+                                       checked={isCheckAll}
+                                />
                             </label>
                             : item.label_th
-                        }
+                    }
                     </th>)}
                 </tr>
                 </thead>
                 <tbody>
                 {
                     users.length > 0 &&
-                    users.map((item, index) => <ItemTable user={item} key={item.id} index={index} tableColumns={tableColumns} operations={operations}/>)
+                    users.map((item, index) =>
+                        <ItemTable user={item} key={item.id} index={index}
+                                   isCheck={isCheck}
+                                   handleActionTable={handleActionTable}
+                                   handleClickCheckboxTable={handleClickCheckboxTable}
+                                   tableColumns={tableColumns} o
+                                   perations={operations}/>)
                 }
                 </tbody>
             </table>
@@ -137,6 +205,8 @@ const TableData = (props) => {
                 </CRow>
             </div>
         </CCardFooter>
+        <UserForm closeModal={closeModal} typeAction={typeAction} item={item} title="Created new user"
+                  submitHandelSuccess={submitHandelSuccess}/>
     </CCard>
 }
 export default TableData;

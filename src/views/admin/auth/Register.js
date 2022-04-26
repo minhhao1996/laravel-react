@@ -14,11 +14,10 @@ import userApi from "../../../services/userApi";
 import {useNavigate } from 'react-router-dom';
 import * as yup from "yup";
 import {Formik, Form, Field} from 'formik';
-import {useDispatch} from "react-redux";
-import {adminRegisterSuccess} from "../../../store/actions/adminActions";
+
 
 const Register = () => {
-    const dispatch = useDispatch();
+
     let navigate = useNavigate();
     const initialValues = {
         name: '',

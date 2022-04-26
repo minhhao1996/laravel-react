@@ -2,12 +2,16 @@ import {useEffect, useState} from "react";
 import userApi from "../../../services/userApi";
 import {toast} from "react-toastify";
 import TableData from "../../../components/table/Table";
-import {Link} from "react-router-dom";
 import {CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle} from "@coreui/react";
+import {useDispatch} from "react-redux";
+import { toggleModal} from "../../../store/actions/adminActions";
+
 
 const User = () => {
     const [users, setUsers] = useState([]);
-    const [visible, setVisible] = useState(false)
+    const [load, setLoad] = useState(false);
+    const dispatch = useDispatch();
+
     useEffect(() => {
         const fetchUsers = async () => {
             let response = await userApi.getAllUsers();
@@ -24,7 +28,7 @@ const User = () => {
                 error.toString();
             toast.error(resMessage)
         });
-    }, []);
+    }, [load]);
 
     const tableUserColumns = [
         {
@@ -50,6 +54,10 @@ const User = () => {
             label_th: 'About',
             column: 'about',
         },
+        {
+            label_th: 'Verify',
+            column: 'verify',
+        },
     ];
     const operations =[
         {
@@ -64,25 +72,15 @@ const User = () => {
             type: 'modal',
             column: 'id',
         },
-    ]
+    ];
+
     return (
         <div className="card">
             <div className="d-flex justify-content-end m-2">
-                <CButton onClick={() => setVisible(!visible)}>Launch demo modal</CButton>
+                <CButton onClick={() => dispatch(toggleModal(true))}>Create</CButton>
             </div>
-            <CModal visible={visible} onClose={() => setVisible(false)}>
-                <CModalHeader onClose={() => setVisible(false)}>
-                    <CModalTitle>Modal title</CModalTitle>
-                </CModalHeader>
-                <CModalBody>Woohoo, you're reading this text in a modal!</CModalBody>
-                <CModalFooter>
-                    <CButton color="secondary" onClick={() => setVisible(false)}>
-                        Close
-                    </CButton>
-                    <CButton color="primary">Save changes</CButton>
-                </CModalFooter>
-            </CModal>
-            <TableData dataTable={users} tableColumns={tableUserColumns} operations={operations}/>
+
+            <TableData loadData={()=>setLoad(!load)}  dataTable={users} tableColumns={tableUserColumns} operations={operations}/>
         </div>
     )
 }
