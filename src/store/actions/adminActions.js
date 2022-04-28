@@ -28,3 +28,11 @@ export const toggleModal = (toggle) => (
         toggle: toggle,
     }
 );
+
+export const getMedial = (folder,keySearch = '') => (
+    {
+        type: actionTypes.MEDIA_LOAD,
+        folder: folder,
+        keySearch: keySearch,
+    }
+);

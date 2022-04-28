@@ -26,13 +26,13 @@ const axiosClient = () => {
         response=>{
             return response
         },
-        async (error) => {
-            if (error.response.status===401){
-                localStorage.removeItem('persist:admin')
-            }
-            return true;
-
-        }
+        // async (error) => {
+        //     if (error.response.status===401){
+        //         localStorage.removeItem('persist:admin')
+        //     }
+        //     return true;
+        //
+        // }
     )
     return instance;
 };

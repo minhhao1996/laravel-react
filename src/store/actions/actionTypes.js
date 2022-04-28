@@ -12,6 +12,9 @@ const actionTypes = Object.freeze({
     USER_LOGIN_FAIL:"USER_LOGIN_FAIL",
     USER_PROCESS_LOGOUT:"USER_PROCESS_LOGOUT",
 
-    MODAL_TOGGLE:"MODAL_TOGGLE"
+    MODAL_TOGGLE:"MODAL_TOGGLE",
+
+    //Media
+    MEDIA_LOAD:"MEDIA_LOAD",
 })
 export default actionTypes

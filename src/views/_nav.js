@@ -1,7 +1,7 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
 import {
-    cilCursor,
+    cilCursor, cilFile,
     cilPuzzle,
     cilSpeedometer,
 } from '@coreui/icons'
@@ -37,6 +37,13 @@ const _nav = [
             },
 
         ],
+    },
+    {
+        component: CNavItem,
+        name: 'Medias',
+        to: '/admin/medias',
+        icon: <CIcon icon={cilFile} customClassName="nav-icon" />,
+
     },
     {
         component: CNavGroup,
